@@ -13,7 +13,7 @@ class TestTextFile:
                                                                                      "vbmvbmvbm"]
 
     def test_size(self, text_file_fixture):
-        assert text_file_fixture.size == 72
+        assert text_file_fixture.size == 66
 
     def test_text(self, text_file_fixture):
         assert text_file_fixture.text == r"""asdaffh
