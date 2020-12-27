@@ -1,3 +1,7 @@
+![badge](https://github.com/aviadtamir/pystringmatcher/workflows/pystringmatcher%20CI%5cCD/badge.svg)
+[![PyPI version fury.io](https://badge.fury.io/py/pystringmatcher.svg)](https://pypi.python.org/pypi/pystringmatcher/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/pystringmatcher.svg)](https://pypi.python.org/pypi/pystringmatcher/)
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://github.com/aviadtamir/pystringmatcher)
 # pystringmatcher
 
 ## description
