@@ -1,1 +1,1 @@
-include tests/*.text
+include pystringmatcher/tests/*.text
