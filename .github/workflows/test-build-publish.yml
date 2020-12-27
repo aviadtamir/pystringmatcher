@@ -42,7 +42,6 @@ jobs:
       - name: Run Tests
         run: |
           pytest .
-        working-directory: ./pystringmatcher
   build:
     needs: test
     runs-on: ubuntu-latest
