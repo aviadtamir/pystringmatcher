@@ -27,7 +27,7 @@ class Matcher:
                 self._matches[pattern] = ((executor.submit(self._text_chunk.find_matches_in_chunk, pattern,
                                                            self._text_chunk.text, self._algorithm).result()))
 
-    @propertys
+    @property
     def matches(self) -> Dict:
         return self._matches
 

@@ -18,7 +18,8 @@ setuptools.setup(
     ],
     python_requires='>=3.7',
     install_requires=[
-        "cached_property"
+        "cached_property",
+        "vcversioner"
     ],
     entry_points={
         'console_scripts': ['stringmatcher=pystringmatcher.__main__:main'],
