@@ -39,7 +39,8 @@ jobs:
       - name: Test with pytest
         run: |
           pip install .
-          pytest tests/ --doctest-modules --cov=tornado_bunny
+          pytest tests/
+        working-directory: ./pystringmatcher
   build:
     needs: test
     runs-on: ubuntu-latest
