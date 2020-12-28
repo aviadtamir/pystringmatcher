@@ -34,3 +34,72 @@ optional arguments:
 ```bash
 stringmatcher -h 
 ```
+* In your own program
+
+```python
+import os
+from concurrent.futures import ThreadPoolExecutor
+
+from pystringmatcher.Objects import Aggregator
+from pystringmatcher.Algorithms import RabinKarp
+from pystringmatcher.Objects import Matcher
+from pystringmatcher.Types import TextFile
+
+
+try:
+    file_path = r"/path/to/file.txt"
+    text = TextFile(file_path=file_path) # raises FileNotFoundError if the file doesn't exist 
+    algorithm = RabinKarp() # implemented in package in .Algorithms
+    chunks = text.divide_into_chunks(num_of_lines_each_chunk=1000)
+    matchers = []
+    patterns = "alpha,beta,charlie,delta".split(",")
+    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+        for chunk in chunks:
+            matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
+            matchers.append(matcher)
+            executor.submit(matcher.find_matches)
+    aggregator = Aggregator(matchers=matchers)
+    aggregator.aggregate_matches()
+    if aggregator.aggregated_matches:
+        print(f"Found matches")
+        print(aggregator.aggregated_matches)
+except FileNotFoundError:
+    print(f"The file: {file_path} was not found and may not exist")
+``` 
+
+* Implementing your own matching algorithm
+```python
+
+from pystringmatcher.Algorithms import Algorithm
+from pystringmatcher.Types import Match
+
+
+class MyAlgorithm(Algorithm):
+    
+    def preprocess(self, pattern, text, *args, **kwargs):
+        """some preprocess logic goes here if needed"""
+    
+    def run(self, pattern, text, *args, **kwargs):
+        matches = []
+        """the mathcing algorithm logic goes here
+        for any match: matches.append(Match(char_offset=start_index_of_match)) 
+        """         
+        return matches
+        
+```
+        
+        
+    
+
+
+
+
+    
+
+
+
+
+
+
+
+```

@@ -1,1 +1,2 @@
 include test.text
+include version.text
