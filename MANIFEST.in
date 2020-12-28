@@ -1,2 +1,2 @@
-include test.text
-include version.text
+include test.txt
+include version.txt
