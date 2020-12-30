@@ -6,7 +6,7 @@
 
 ## description
 a small utility tool for finding substrings and text patterns in an input file
-
+by dividing the file into chunks and processing them concurrently
 ## installation:
 ```bash
 pip install pystringmatcher
@@ -15,7 +15,7 @@ pip install pystringmatcher
 ### usage:
 * using the python module
 ```bash
-python -m py pyringmatcher -h
+python -m py pystringmatcher -h
 
 Finding text patterns in input text file
 
