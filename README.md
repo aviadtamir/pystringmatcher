@@ -6,6 +6,8 @@
 
 ## description
 a small utility tool for finding substrings and text patterns in an input file
+the tool is cutting the text in the file into chunks and processes every chunk in a separate process
+using python's multiprocessing module
 
 ## installation:
 ```bash
@@ -38,7 +40,7 @@ stringmatcher -h
 
 ```python
 import os
-from concurrent.futures import ThreadPoolExecutor
+from multiprocessing.pool import Pool
 
 from pystringmatcher.Objects import Aggregator
 from pystringmatcher.Algorithms import RabinKarp
@@ -47,24 +49,25 @@ from pystringmatcher.Types import TextFile
 
 
 try:
-    file_path = r"/path/to/file.txt"
-    text = TextFile(file_path=file_path) # raises FileNotFoundError if the file doesn't exist 
-    algorithm = RabinKarp() # implemented in package in .Algorithms
+    text = TextFile(file_path="/path/to/file")
+    algorithm = RabinKarp()
     chunks = text.divide_into_chunks(num_of_lines_each_chunk=1000)
     matchers = []
-    patterns = "alpha,beta,charlie,delta".split(",")
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
-        for chunk in chunks:
-            matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
-            matchers.append(matcher)
-            executor.submit(matcher.find_matches)
+    patterns = "alpha,beta,charlie,delta,echo,foxtrot".split(",")
+    print(f"[X] - Start finding the patterns : {patterns} in the file: {text}")
+    pool = Pool(processes=os.cpu_count())
+
+    for chunk in chunks:
+        matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
+        matchers.append(matcher)
+
+    matchers = pool.map(Matcher.find_matches, matchers)
     aggregator = Aggregator(matchers=matchers)
     aggregator.aggregate_matches()
     if aggregator.aggregated_matches:
-        print(f"Found matches")
-        print(aggregator.aggregated_matches)
+        print(aggregator.aggregated_matches) 
 except FileNotFoundError:
-    print(f"The file: {file_path} was not found and may not exist")
+    print(f"The file: {text} was not found and may not exist")
 ``` 
 
 * Implementing your own matching algorithm
