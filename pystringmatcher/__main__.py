@@ -1,8 +1,7 @@
 import argparse
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor
-
+from multiprocessing.pool import Pool
 from pystringmatcher.Objects import Aggregator
 from pystringmatcher.Algorithms import RabinKarp
 from pystringmatcher.Objects import Matcher
@@ -39,22 +38,24 @@ def main():
         matchers = []
         patterns = patterns.split(",")
         logging.info(f"[X] - Start finding the patterns : {patterns} in the file: {file_path}")
-        with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
-            for chunk in chunks:
-                matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
-                matchers.append(matcher)
-                executor.submit(matcher.find_matches)
+        pool = Pool(processes=os.cpu_count())
+
+        for chunk in chunks:
+            matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
+            matchers.append(matcher)
+
+        matchers = pool.map(Matcher.find_matches, matchers)
         aggregator = Aggregator(matchers=matchers)
         aggregator.aggregate_matches()
         if aggregator.aggregated_matches:
-            logging.info(f"Found matches")
+            logging.info("Found matches")
             logging.info(aggregator.aggregated_matches)
             return
         logging.info("No matches were found")
     except FileNotFoundError:
         logging.error(f"The file: {file_path} was not found and may not exist")
     except KeyboardInterrupt:
-        logging.info(f"Cancelled by user")
+        logging.info("Cancelled by user")
 
 
 if __name__ == "__main__":

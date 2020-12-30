@@ -18,10 +18,12 @@ class Aggregator:
             for pattern in matcher.patterns:
                 if self._aggregated_matches.get(pattern):
                     # if the pattern already exists -> extend its matches list entry
-                    self._aggregated_matches[pattern].extend(matcher.matches[pattern])
+                    if matcher.matches.get(pattern):
+                        self._aggregated_matches[pattern].extend(matcher.matches[pattern])
                 else:
                     # if the pattern doesn't already exists -> create its matches list entry
-                    self._aggregated_matches[pattern] = matcher.matches[pattern]
+                    if matcher.matches.get(pattern):
+                        self._aggregated_matches[pattern] = matcher.matches[pattern]
 
     @property
     def aggregated_matches(self) -> Dict:
