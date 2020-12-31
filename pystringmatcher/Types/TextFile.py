@@ -1,7 +1,10 @@
+import os
 import pathlib
+from multiprocessing.pool import Pool
 from typing import List
 
 from cached_property import cached_property
+
 
 from .Line import Line
 from . import TextChunk
@@ -51,3 +54,18 @@ class TextFile:
         """
         return [TextChunk(lines=self.lines[i:i + num_of_lines_each_chunk], index=i + 1) for i in
                 range(0, len(self.lines), num_of_lines_each_chunk)]
+
+    @staticmethod
+    def find_matches(chunks, patterns, algorithm):
+        from pystringmatcher.Objects.Matcher import Matcher
+        from pystringmatcher.Objects.Aggregator import Aggregator
+        pool = Pool(processes=os.cpu_count())
+        matchers = []
+
+        for chunk in chunks:
+            matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
+            matchers.append(matcher)
+        matchers = pool.map(Matcher.find_matches, matchers)
+        aggregator = Aggregator(matchers=matchers)
+        return aggregator.aggregate_matches()
+

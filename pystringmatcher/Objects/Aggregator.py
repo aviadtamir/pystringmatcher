@@ -24,6 +24,7 @@ class Aggregator:
                     # if the pattern doesn't already exists -> create its matches list entry
                     if matcher.matches.get(pattern):
                         self._aggregated_matches[pattern] = matcher.matches[pattern]
+        return self.aggregated_matches
 
     @property
     def aggregated_matches(self) -> Dict:
