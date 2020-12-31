@@ -32,24 +32,15 @@ def main():
     patterns = validate_arg(args.patterns)
     num_lines_per_chunk = validate_arg(args.num_lines_per_chunk)
     try:
-        text = TextFile(file_path=file_path)
+        text_file = TextFile(file_path=file_path)
         algorithm = RabinKarp()
-        chunks = text.divide_into_chunks(num_of_lines_each_chunk=num_lines_per_chunk)
-        matchers = []
+        chunks = text_file.divide_into_chunks(num_of_lines_each_chunk=num_lines_per_chunk)
         patterns = patterns.split(",")
         logging.info(f"[X] - Start finding the patterns : {patterns} in the file: {file_path}")
-        pool = Pool(processes=os.cpu_count())
-
-        for chunk in chunks:
-            matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
-            matchers.append(matcher)
-
-        matchers = pool.map(Matcher.find_matches, matchers)
-        aggregator = Aggregator(matchers=matchers)
-        aggregator.aggregate_matches()
-        if aggregator.aggregated_matches:
+        matches = text_file.find_matches(chunks=chunks, patterns=patterns, algorithm=algorithm)
+        if matches:
             logging.info("Found matches")
-            logging.info(aggregator.aggregated_matches)
+            logging.info(matches)
             return
         logging.info("No matches were found")
     except FileNotFoundError:

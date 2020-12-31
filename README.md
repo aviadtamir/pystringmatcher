@@ -52,24 +52,18 @@ try:
     text = TextFile(file_path="/path/to/file")
     algorithm = RabinKarp()
     chunks = text.divide_into_chunks(num_of_lines_each_chunk=1000)
-    matchers = []
     patterns = "alpha,beta,charlie,delta,echo,foxtrot".split(",")
     print(f"[X] - Start finding the patterns : {patterns} in the file: {text}")
-    pool = Pool(processes=os.cpu_count())
+    matches = text.find_matches(chunks=chunks, patterns=patterns, algorithm=algorithm)
 
-    for chunk in chunks:
-        matcher = Matcher(text_chunk=chunk, patterns=patterns, algorithm=algorithm)
-        matchers.append(matcher)
+    if matches:
+        print("Found matches")
+        print(matches)
 
-    matchers = pool.map(Matcher.find_matches, matchers)
-    aggregator = Aggregator(matchers=matchers)
-    aggregator.aggregate_matches()
-    if aggregator.aggregated_matches:
-        print(aggregator.aggregated_matches) 
+    print("No matches were found")
 except FileNotFoundError:
     print(f"The file: {text} was not found and may not exist")
 ``` 
-
 * Implementing your own matching algorithm
 ```python
 
@@ -89,20 +83,4 @@ class MyAlgorithm(Algorithm):
         """         
         return matches
         
-```
-        
-        
-    
-
-
-
-
-    
-
-
-
-
-
-
-
 ```
