@@ -39,12 +39,7 @@ stringmatcher -h
 * In your own program
 
 ```python
-import os
-from multiprocessing.pool import Pool
-
-from pystringmatcher.Objects import Aggregator
 from pystringmatcher.Algorithms import RabinKarp
-from pystringmatcher.Objects import Matcher
 from pystringmatcher.Types import TextFile
 
 
